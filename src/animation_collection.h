@@ -1,4 +1,3 @@
-#include "animation/animator.h"
 #include "animCallbacks.h"
 #include "animation/animation.h"
 #include "animation/animationVariable.h"
