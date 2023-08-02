@@ -34,6 +34,13 @@ void Animator::startLoopAnimation(Animation *animation) {
     startAnimation(animation);
 }
 
+void Animator::forceStopAnimations() {
+    for(u_int8_t i = 0; i < NUM_OF_ANIMATIONS; i++) { 
+        delete this->animations[i];
+        this->animations[i] = nullptr;
+    }
+}
+
 bool Animator::getIsActive() {
     for (u_int8_t i = 0; i < NUM_OF_VARIABLES; i++) {
         if (this->animations[i]) {

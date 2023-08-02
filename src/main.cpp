@@ -1,66 +1,43 @@
-#include <ESP8266WiFi.h>
-#include <fauxmoESP.h>
-#include "util/serial.h"
-#include "listeners.h"
+#include "animation/animator.h"
 #include "animation_collection.h"
+#include "listeners.h"
+#include "util/serial.h"
+#include "util/wifi.h"
+#include "util/server.h"
 
-fauxmoESP fauxmo;
+#define TEST_MODE 0
+#define DEBUG_MODE 0
 
-void setupWifi() {
-  WiFi.mode(WIFI_STA);
-  Serial.printf("[WIFI] Connecting to %s ", WIFI_SSID);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
-      Serial.print(".");
-      delay(100);
-  }
-  Serial.println();
-  Serial.printf("[WIFI] Connected. STATION Mode, SSID: %s, IP address: %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
-}
+Animator* Animator::instance = nullptr;
 
-void setupFauxmo() {
-  fauxmo.addDevice("light one");
-  fauxmo.setPort(80);
-  fauxmo.enable(true);
-  fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
-      Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
-
-      if (strcmp(device_name, "light one")==0) {
-          loopPulseBrigtness();
-      }
-  });
-}
+void test();
 
 void setup() {
   // initialize serial
   initSerial();
 
-  // initialize Arduino IoT Cloud
-  // initCloud();
+  // initialize wifi & start webserver
   setupWifi();
-  setupFauxmo();
+  setupWebserver();
 
   // initialize strip
   initStrip();
 }
 
-Animator* Animator::instance = nullptr;
+void loop() {
+  if (TEST_MODE) {
+    test();
+  }
+
+  Animator::getInstance()->advanceAnimations();
+  webserverListen();
+}
 
 bool sw = true;
-void loop() {
+void test() {
   if (sw) {
-    // loopPulseBrigtness();
+    loopPulseBrigtness();
 
     sw = false;
   } 
-
-  Animator::getInstance()->advanceAnimations();
-  
-  // fetchCloud();
-  fauxmo.handle();
-  // static unsigned long last = millis();
-  // if (millis() - last > 5000) {
-  //     last = millis();
-  //     Serial.printf("[MAIN] Free heap: %d bytes\n", ESP.getFreeHeap());
-  // }
 }

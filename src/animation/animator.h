@@ -17,6 +17,7 @@ public:
     void advanceAnimations();
     void startAnimation(Animation *animation);
     void startLoopAnimation(Animation *animation);
+    void forceStopAnimations();
     bool getIsActive();
 };
 
