@@ -1,0 +1,7 @@
+void onColoredLightChange()  {
+  
+}
+
+void onIsOnChange()  {
+  
+}
