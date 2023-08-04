@@ -1,5 +1,4 @@
-#ifndef serial_h
-#define serial_h
+#pragma once
 
 #include <Arduino.h>
 
@@ -17,5 +16,3 @@ void log(T arg, Args... args) {
     Serial.print(arg);
     log(args...);
 }
-
-#endif
