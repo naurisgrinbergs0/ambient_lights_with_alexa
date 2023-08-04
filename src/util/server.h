@@ -1,21 +1,17 @@
 #include <fauxmoESP.h>
 
-#define DEVICE00 "zero"
+typedef void (*StateChangeCallback)(unsigned char device_id, const char * device_name, bool state, unsigned char value);
 
 fauxmoESP fauxmo;
 
-void setupWebserver() {
-  fauxmo.addDevice(DEVICE00);
+void setupWebserver(const char* deviceList[], StateChangeCallback stateChangeCallback) {
+  for (u_int8_t i = 0; deviceList[i]; i++) {
+      fauxmo.addDevice(deviceList[i]);
+  }
 
   fauxmo.setPort(80);
   fauxmo.enable(true);
-  fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
-      Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
-    
-      if (strcmp(device_name, DEVICE00)==0) {
-          onDevice00Change();
-      }
-  });
+  fauxmo.onSetState(stateChangeCallback);
 }
 
 void webserverListen() {
