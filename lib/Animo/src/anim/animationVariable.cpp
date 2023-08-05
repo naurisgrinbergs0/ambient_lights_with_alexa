@@ -1,6 +1,6 @@
 #include "animationVariable.h"
 
-void AnimationVariable::update(unsigned long time) {
+void AnimationVariable::update(float time) {
     this->easingFunction(this, time);
     this->updateCallback(*this);
 }

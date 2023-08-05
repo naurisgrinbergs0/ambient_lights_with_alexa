@@ -5,7 +5,6 @@
 #include "handlers.h"
 
 #define TEST_MODE 0
-#define DEBUG_MODE 0
 
 #define VIRTUAL_DEVICE_01 "Virtual Device 01"
 
@@ -13,7 +12,6 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
 void test();
 
 bool webserverInitialized = false;
-Animation* 
 
 void setup() {
   initSerial();
@@ -50,9 +48,10 @@ void loop() {
   // initialization
   if (isWifiConnected() && !webserverInitialized) {
     handleWifiConnected();
-  } else {
-    handleWifiConnecting();
-  }
+  } 
+  // else {
+  //   handleWifiConnecting();
+  // }
   // listen for requests
   if (isWifiConnected() && webserverInitialized) {
     webserverListen();
@@ -67,6 +66,7 @@ void loop() {
 }
 
 void virtualDeviceStateChangeCallback(unsigned char device_id, const char * device_name, bool state, unsigned char value) {
+  value = map(value, 0, 255, 0, 100);
   Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
 
   if (strcmp(device_name, VIRTUAL_DEVICE_01) == 0) {
@@ -80,7 +80,9 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
 
 bool sw = true;
 void test() {
+  // delay(300);
   if (sw) {
+    set(0, 255, 0);
     loopFadeBrightness();
 
     sw = false;

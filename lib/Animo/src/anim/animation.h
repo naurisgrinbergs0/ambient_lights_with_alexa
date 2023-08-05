@@ -2,28 +2,30 @@
 
 #include <Arduino.h>
 #include "animationVariable.h"
-#include "../constants.h"
-#include "easingFunctions.h"
+
+typedef void (*VariableUpdateCallback) (const AnimationVariable variable);
+typedef void (*EasingFunction) (const AnimationVariable *variable, float time);
 
 class Animation {
 private:
-    std::vector<AnimationVariable> variables;
+    // std::vector<AnimationVariable> variables;
     
 public:
-    bool isLoop = false;
-    bool isActive = false;
+std::vector<AnimationVariable> variables;
     unsigned long startTime = 0;
     unsigned long pausedTime = 0;
     unsigned long duration = 0;
+    bool isLoop = false;
+    bool isActive = false;
 
-    Animation(unsigned long startTime, unsigned long duration, bool isLoop = false):
-        startTime(startTime), duration(duration), isLoop(isLoop) {};
+    Animation(unsigned long duration, bool isLoop = false):
+        duration(duration), isLoop(isLoop) {};
 
     void start();
     void pause();
     void update();
 
-    AnimationVariable* addVar(int startValue, int endValue, VariableUpdateCallback updateCallback, 
-        EasingFunction easingFunction = ANIMO_LINEAR_EASING);
+    AnimationVariable addVar(int startValue, int endValue, VariableUpdateCallback updateCallback, 
+        EasingFunction easingFunction /*= ANIMO_LINEAR_EASING*/);
     void removeVar(AnimationVariable* variable);
 };

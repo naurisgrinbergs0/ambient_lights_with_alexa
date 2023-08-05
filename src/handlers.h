@@ -2,6 +2,14 @@
 
 #include "animCollection.h"
 
+bool isLightOn = false;
 void handleDangerAction()  {
-    fadeIn(255, 0, 0);
+    set(255, 0, 0);
+    if (!isLightOn) {
+        fadeInBrightness();
+        isLightOn = true;
+    } else {
+        fadeOutBrightness();
+        isLightOn = false;
+    }
 }

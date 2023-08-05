@@ -32,10 +32,11 @@ void Animation::pause() {
     this->pausedTime = millis();
 }
 
-AnimationVariable* Animation::addVar(int startValue, int endValue, VariableUpdateCallback updateCallback, EasingFunction easingFunction) {
+AnimationVariable Animation::addVar(int startValue, int endValue, 
+    VariableUpdateCallback updateCallback, EasingFunction easingFunction) {
     AnimationVariable variable = AnimationVariable(startValue, endValue, updateCallback, easingFunction);
     this->variables.push_back(variable);
-    return &variable;
+    return variable;
 }
 
 void Animation::removeVar(AnimationVariable* variable) {
