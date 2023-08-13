@@ -1,5 +1,15 @@
 #include "animo.h"
 
+Animo::~Animo() {
+    for (Animation* anim: this->animations) {
+        delete anim;
+    }
+
+    for (AnimationChain* ch: this->animationChains) {
+        delete ch;
+    }
+}
+
 void Animo::advanceAnimations() {
     for (Animation* anim: this->animations) {
         anim->update();

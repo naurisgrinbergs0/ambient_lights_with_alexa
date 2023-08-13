@@ -8,10 +8,9 @@ typedef void (*EasingFunction) (const AnimationVariable *variable, float time);
 
 class Animation {
 private:
-    // std::vector<AnimationVariable> variables;
+    std::vector<AnimationVariable> variables;
     
 public:
-std::vector<AnimationVariable> variables;
     unsigned long startTime = 0;
     unsigned long pausedTime = 0;
     unsigned long duration = 0;

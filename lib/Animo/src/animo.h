@@ -17,6 +17,8 @@ private:
     std::vector<AnimationChain*> animationChains;
 
 public:
+    ~Animo();
+
     void advanceAnimations();
     void removeAllAnimations(bool allowToFinish = true);
 

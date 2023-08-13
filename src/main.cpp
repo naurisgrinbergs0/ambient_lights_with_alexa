@@ -4,7 +4,8 @@
 #include "util/server.h"
 #include "handlers.h"
 
-#define TEST_MODE 0
+#define SET_UP_WIFI_AND_SERVER 0
+#define TEST_MODE 1
 
 #define VIRTUAL_DEVICE_01 "Virtual Device 01"
 
@@ -13,35 +14,34 @@ void test();
 
 bool webserverInitialized = false;
 
+// construct anims
+GalacticNebula galacticNebula;
+
+AnimationChain* fadeChain;
 void setup() {
   initSerial();
   initStrip();
-  setupWifi();
+
+  if (SET_UP_WIFI_AND_SERVER) {
+    // initialization animation
+    setRGB(0, 255, 187, 0, false);
+    fadeChain = loopFadeBrightness(200, 200, 0, 255);
+    setupWifi();
+  }
 }
 
 void handleWifiConnected() {
-  set(0, 255, 0);
-  delay(500);
-  clear();
   // set up webserver when wifi connected
   const char* deviceList[] = { VIRTUAL_DEVICE_01, nullptr };
   setupWebserver(deviceList, virtualDeviceStateChangeCallback);
   webserverInitialized = true;
-}
-void handleWifiConnecting() {
-  int i = 0;
-  bool turningOn = true;
-  while (WiFi.status() != WL_CONNECTED) {
-      Serial.print(".");
-      set(i, turningOn ? 255 : 0, turningOn ? 187 : 0, 0);
-      show();
-      delay(100);
-      i++;
-      if (i >= NUM_LEDS) {
-        i = 0;
-        turningOn = !turningOn;
-      }
-  }
+
+  animo.removeAnimationChain(fadeChain, false, false);
+  setBrightness(255);
+  setRGB(0, 0, 255, 0, true);
+  delay(800);
+  setRGB(255, 255, 255);
+  setBrightness(0, true);
 }
 
 void loop() {
@@ -49,9 +49,7 @@ void loop() {
   if (isWifiConnected() && !webserverInitialized) {
     handleWifiConnected();
   } 
-  // else {
-  //   handleWifiConnecting();
-  // }
+  
   // listen for requests
   if (isWifiConnected() && webserverInitialized) {
     webserverListen();
@@ -63,6 +61,9 @@ void loop() {
   if (TEST_MODE) {
     test();
   }
+  
+  // additional functions to call every frame
+  galacticNebula.advance();
 }
 
 void virtualDeviceStateChangeCallback(unsigned char device_id, const char * device_name, bool state, unsigned char value) {
@@ -70,8 +71,10 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
   Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
 
   if (strcmp(device_name, VIRTUAL_DEVICE_01) == 0) {
-      if (value < 10) {
-        handleDangerAction();
+      if (value <= 10) {
+        handleLightToggle();
+      } else if (10 < value && value <= 20) {
+        galacticNebula.start();
       }
   }
 }
@@ -82,8 +85,10 @@ bool sw = true;
 void test() {
   // delay(300);
   if (sw) {
-    set(0, 255, 0);
-    loopFadeBrightness();
+    setBrightness(255);
+    clear(true);
+
+    galacticNebula.start();
 
     sw = false;
   } 

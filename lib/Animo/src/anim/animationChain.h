@@ -14,6 +14,7 @@ public:
     bool isActive = false;
     u_int8_t playingAnimIndex = 0;
 
+    ~AnimationChain();
     AnimationChain(bool isLoop = false): isLoop(isLoop) {};
 
     void start();

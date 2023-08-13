@@ -1,5 +1,11 @@
 #include "animationChain.h"
 
+AnimationChain::~AnimationChain() {
+    for(Animation* anim: this->animations) {
+        delete anim;
+    }
+}
+
 Animation* AnimationChain::currAnim() {
     return this->animations[this->playingAnimIndex];
 }
