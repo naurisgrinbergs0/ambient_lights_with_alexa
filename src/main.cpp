@@ -4,8 +4,8 @@
 #include "util/server.h"
 #include "handlers.h"
 
-#define SET_UP_WIFI_AND_SERVER 0
-#define TEST_MODE 1
+#define SET_UP_WIFI_AND_SERVER 1
+#define TEST_MODE 0
 
 #define VIRTUAL_DEVICE_01 "Virtual Device 01"
 
@@ -74,7 +74,9 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
       if (value <= 10) {
         handleLightToggle();
       } else if (10 < value && value <= 20) {
-        galacticNebula.start();
+        handleRainbow();
+      } else if (20 < value && value <= 30) {
+        handleNightLight();
       }
   }
 }
@@ -88,7 +90,7 @@ void test() {
     setBrightness(255);
     clear(true);
 
-    galacticNebula.start();
+    // galacticNebula.start();
 
     sw = false;
   } 

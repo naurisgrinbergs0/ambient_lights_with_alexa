@@ -33,7 +33,7 @@ void Animation::pause() {
 }
 
 AnimationVariable Animation::addVar(int startValue, int endValue, 
-    VariableUpdateCallback updateCallback, EasingFunction easingFunction) {
+    std::function<void(const AnimationVariable)> updateCallback, EasingFunction easingFunction) {
     AnimationVariable variable = AnimationVariable(startValue, endValue, updateCallback, easingFunction);
     this->variables.push_back(variable);
     return variable;

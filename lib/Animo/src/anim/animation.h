@@ -3,7 +3,6 @@
 #include <Arduino.h>
 #include "animationVariable.h"
 
-typedef void (*VariableUpdateCallback) (const AnimationVariable variable);
 typedef void (*EasingFunction) (const AnimationVariable *variable, float time);
 
 class Animation {
@@ -24,7 +23,7 @@ public:
     void pause();
     void update();
 
-    AnimationVariable addVar(int startValue, int endValue, VariableUpdateCallback updateCallback, 
-        EasingFunction easingFunction /*= ANIMO_LINEAR_EASING*/);
+    AnimationVariable addVar(int startValue, int endValue, std::function<void(const AnimationVariable)> updateCallback, 
+        EasingFunction easingFunction);
     void removeVar(AnimationVariable* variable);
 };
