@@ -1,3 +1,4 @@
+#include "util/util.h"
 #include "util/serial.h"
 #include "util/strip.h"
 #include "util/wifi.h"
@@ -13,9 +14,6 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
 void test();
 
 bool webserverInitialized = false;
-
-// construct anims
-GalacticNebula galacticNebula;
 
 AnimationChain* fadeChain;
 void setup() {
@@ -40,7 +38,6 @@ void handleWifiConnected() {
   setBrightness(255);
   setRGB(0, 0, 255, 0, true);
   delay(800);
-  setRGB(255, 255, 255);
   setBrightness(0, true);
 }
 
@@ -61,9 +58,8 @@ void loop() {
   if (TEST_MODE) {
     test();
   }
-  
-  // additional functions to call every frame
-  galacticNebula.advance();
+
+  advanceAllAnims();
 }
 
 void virtualDeviceStateChangeCallback(unsigned char device_id, const char * device_name, bool state, unsigned char value) {
@@ -71,12 +67,19 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
   Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
 
   if (strcmp(device_name, VIRTUAL_DEVICE_01) == 0) {
-      if (value <= 10) {
+      if (isInRange(value, 1, 5)) {
+        setRGB(255, 255, 255);
+        handleLightsOn();
+      } else if (isInRange(value, 6, 10)) {
+        handleLightsOff();
+      } else if (isInRange(value, 11, 15)) {
         handleLightToggle();
-      } else if (10 < value && value <= 20) {
+      } else if (isInRange(value, 16, 20)) {
+        handleBedLight();
+      } else if (isInRange(value, 21, 25)) {
         handleRainbow();
-      } else if (20 < value && value <= 30) {
-        handleNightLight();
+      } else if (isInRange(value, 26, 30)) {
+        handlePixelRush();
       }
   }
 }
@@ -90,7 +93,7 @@ void test() {
     setBrightness(255);
     clear(true);
 
-    // galacticNebula.start();
+    // galacticNebula->start();
 
     sw = false;
   } 

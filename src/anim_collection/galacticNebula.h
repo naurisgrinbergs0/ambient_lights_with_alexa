@@ -3,7 +3,7 @@
 #include "anim.h"
 
 class NebulaCloud;
-static void cloudUpdateCallback(const AnimationVariable var, u_int16_t cloudSize);
+// static void cloudUpdateCallback(const AnimationVariable var, u_int16_t cloudSize);
 
 class GalacticNebula : Anim {
 private:
@@ -24,7 +24,7 @@ private:
             endPos = startPos < 0 || startPos - cloudSize < 0
                 ? random(startPos + cloudSize, maxPos)
                 : random(startPos - cloudSize, minPos);
-            unsigned long duration = random(5000, 10000);
+            // unsigned long duration = random(5000, 10000);
             centerHue = random(0, 360);
             gradStep = (float)random(10, 20) / 10.0f;
 

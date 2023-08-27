@@ -15,9 +15,10 @@ public:
     unsigned long duration = 0;
     bool isLoop = false;
     bool isActive = false;
+    std::function<void()> finishedCallback = nullptr;
 
-    Animation(unsigned long duration, bool isLoop = false):
-        duration(duration), isLoop(isLoop) {};
+    Animation(unsigned long duration, bool isLoop = false, std::function<void()> finishedCallback = nullptr):
+        duration(duration), isLoop(isLoop), finishedCallback(finishedCallback) {};
 
     void start();
     void pause();

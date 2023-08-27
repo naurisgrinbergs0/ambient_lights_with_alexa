@@ -10,13 +10,29 @@ Animo::~Animo() {
     }
 }
 
+
 void Animo::advanceAnimations() {
     for (Animation* anim: this->animations) {
-        anim->update();
+        if (anim->isActive) {
+            anim->update();
+        } else {
+            if (anim->finishedCallback) {
+                anim->finishedCallback();
+            }
+            this->removeAnimation(anim, false);
+        }
     }
 
     for (AnimationChain* ch: this->animationChains) {
-        ch->update();
+        if (ch->isActive) {
+            ch->update();
+        } else {
+            if (ch->finishedCallback) {
+                ch->finishedCallback();
+                Serial.printf("Chains: %d", animationChains.size());
+            }
+            this->removeAnimationChain(ch, false);
+        }
     }
 }
 
@@ -24,12 +40,27 @@ void Animo::removeAllAnimations(bool allowToFinish) {
     if (allowToFinish) {
 
     } else {
-        this-> animations.clear();
+        for(Animation* anim : this->animations) {
+            delete anim;
+        }
+        this->animations.clear();
     }
 }
 
-Animation* Animo::addAnimation(unsigned long duration, bool isLoop) {
-    Animation* animation = new Animation(duration, isLoop);
+void Animo::removeAllAnimationChains(bool allowToFinish) {
+    if (allowToFinish) {
+
+    } else {
+        for(AnimationChain* ch : this->animationChains) {
+            delete ch;
+        }
+        this->animationChains.clear();
+    }
+}
+
+
+Animation* Animo::addAnimation(unsigned long duration, bool isLoop, std::function<void()> finishedCallback) {
+    Animation* animation = new Animation(duration, isLoop, finishedCallback);
     this->animations.push_back(animation);
     return animation;
 }
@@ -50,8 +81,9 @@ void Animo::removeAnimation(Animation* animation, bool allowToFinish) {
     }
 }
 
-AnimationChain* Animo::addAnimationChain(bool isLoop) {
-    AnimationChain* chain = new AnimationChain(isLoop);
+
+AnimationChain* Animo::addAnimationChain(bool isLoop, std::function<void()> finishedCallback) {
+    AnimationChain* chain = new AnimationChain(isLoop, finishedCallback);
     this->animationChains.push_back(chain);
     return chain;
 }

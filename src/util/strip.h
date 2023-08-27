@@ -1,3 +1,4 @@
+#pragma once
 #include <NeoPixelBus.h>
 
 NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod> strip(NUM_LEDS);

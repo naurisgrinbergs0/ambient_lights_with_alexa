@@ -13,9 +13,11 @@ public:
     bool isLoop = false;
     bool isActive = false;
     u_int8_t playingAnimIndex = 0;
+    std::function<void()> finishedCallback;
 
     ~AnimationChain();
-    AnimationChain(bool isLoop = false): isLoop(isLoop) {};
+    AnimationChain(bool isLoop = false, std::function<void()> finishedCallback = nullptr): 
+        isLoop(isLoop), finishedCallback(finishedCallback) {};
 
     void start();
     void pause();

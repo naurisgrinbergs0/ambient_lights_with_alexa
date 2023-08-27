@@ -21,10 +21,11 @@ public:
 
     void advanceAnimations();
     void removeAllAnimations(bool allowToFinish = true);
+    void removeAllAnimationChains(bool allowToFinish = true);
 
-    Animation* addAnimation(unsigned long duration, bool isLoop = false);
+    Animation* addAnimation(unsigned long duration, bool isLoop = false, std::function<void()> finishedCallback = nullptr);
     void removeAnimation(Animation* animation, bool allowToFinish = true);
 
-    AnimationChain* addAnimationChain(bool isLoop = false);
+    AnimationChain* addAnimationChain(bool isLoop = false, std::function<void()> finishedCallback = nullptr);
     void removeAnimationChain(AnimationChain* animation, bool allowChainToFinish = true, bool allowAnimationToFinish = true);
 };
