@@ -26,6 +26,10 @@ class PixelRushLoop : Anim {
         }
 
     public:
+        bool isPlaying() {
+            return anim && anim->isActive;
+        }
+
         void start() {
             createAnimAndStart();
         }

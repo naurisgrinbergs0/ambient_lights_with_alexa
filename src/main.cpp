@@ -15,7 +15,7 @@ void test();
 
 bool webserverInitialized = false;
 
-AnimationChain* fadeChain;
+PulseBrightnessLoop* initAnim = new PulseBrightnessLoop();
 void setup() {
   initSerial();
   initStrip();
@@ -23,7 +23,11 @@ void setup() {
   if (SET_UP_WIFI_AND_SERVER) {
     // initialization animation
     setRGB(0, 255, 187, 0, false);
-    fadeChain = loopFadeBrightness(200, 200, 0, 255);
+    initAnim->setFadeInDuration(200);
+    initAnim->setFadeOutDuration(200);
+    initAnim->setStartBrightness(0);
+    initAnim->setEndBrightness(255);
+    initAnim->start();
     setupWifi();
   }
 }
@@ -34,7 +38,10 @@ void handleWifiConnected() {
   setupWebserver(deviceList, virtualDeviceStateChangeCallback);
   webserverInitialized = true;
 
-  animo.removeAnimationChain(fadeChain, false, false);
+  animo.removeAllAnimationChains(false);
+  delete initAnim;
+  initAnim = nullptr;
+
   setBrightness(255);
   setRGB(0, 0, 255, 0, true);
   delay(800);
@@ -67,19 +74,25 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
   Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
 
   if (strcmp(device_name, VIRTUAL_DEVICE_01) == 0) {
-      if (isInRange(value, 1, 5)) {
+      if (isInRange(value, 1, 5)) { // Sets color to white and turns the strip on
         setRGB(255, 255, 255);
         handleLightsOn();
-      } else if (isInRange(value, 6, 10)) {
+      } else if (isInRange(value, 6, 10)) { // Turns the strip off
         handleLightsOff();
-      } else if (isInRange(value, 11, 15)) {
+      } else if (isInRange(value, 11, 15)) { // Toggles the led strip
         handleLightToggle();
-      } else if (isInRange(value, 16, 20)) {
-        handleBedLight();
-      } else if (isInRange(value, 21, 25)) {
+      } else if (isInRange(value, 16, 20)) { // Turns on light over the bed
+        handleNightLight();
+      } else if (isInRange(value, 21, 25)) { // Starts infinite rainbow animation
         handleRainbow();
-      } else if (isInRange(value, 26, 30)) {
+      } else if (isInRange(value, 26, 30)) { // Starts pixel rush animation
         handlePixelRush();
+      } else if (isInRange(value, 31, 35)) { // Starts danger animation
+        handleDanger();
+      } else if (isInRange(value, 36, 40)) { // Sets Netflix and Chill mood
+        handleNetflixAndChill();
+      } else if (isInRange(value, 41, 45)) { // Restarts the microcontroller
+        ESP.restart();
       }
   }
 }

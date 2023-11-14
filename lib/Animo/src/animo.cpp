@@ -29,7 +29,6 @@ void Animo::advanceAnimations() {
         } else {
             if (ch->finishedCallback) {
                 ch->finishedCallback();
-                Serial.printf("Chains: %d", animationChains.size());
             }
             this->removeAnimationChain(ch, false);
         }

@@ -1,31 +1,37 @@
 #pragma once
 #include <NeoPixelBus.h>
 
-NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod> strip(NUM_LEDS);
-RgbColor colors[NUM_LEDS];
-u_int8_t brightness = 255;
+struct StripState {
+  NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod> strip = NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod>(NUM_LEDS);
+  RgbColor colors[NUM_LEDS];
+  u_int8_t brightness = 255;
+  bool isTurningOn = false;
+  bool isTurningOff = false;
+  bool isOn = false;
+};
+StripState stripState = StripState();
 
 void initStrip() {
-    strip.Begin();
-    strip.Show();
+    stripState.strip.Begin();
+    stripState.strip.Show();
 }
 
 void show() {
   for (int i = 0; i < NUM_LEDS; i++) {
-    strip.SetPixelColor(i, RgbColor(
-      u_int8_t(float(colors[i].R) * (float(brightness) / 255.0)), 
-      u_int8_t(float(colors[i].G) * (float(brightness) / 255.0)), 
-      u_int8_t(float(colors[i].B) * (float(brightness) / 255.0))
+    stripState.strip.SetPixelColor(i, RgbColor(
+      u_int8_t(float(stripState.colors[i].R) * (float(stripState.brightness) / 255.0)), 
+      u_int8_t(float(stripState.colors[i].G) * (float(stripState.brightness) / 255.0)), 
+      u_int8_t(float(stripState.colors[i].B) * (float(stripState.brightness) / 255.0))
       ));
   }
-  strip.Show();
+  stripState.strip.Show();
 }
 
 
 void setRGB(u_int16_t pixel, u_int8_t r, u_int8_t g, u_int8_t b, bool showIt = false) {
-  colors[pixel].R = r;
-  colors[pixel].G = g;
-  colors[pixel].B = b;
+  stripState.colors[pixel].R = r;
+  stripState.colors[pixel].G = g;
+  stripState.colors[pixel].B = b;
   if (showIt) {
     show();
   }
@@ -40,7 +46,7 @@ void setRGB(u_int8_t r, u_int8_t g, u_int8_t b, bool showIt = false) {
 }
 
 void setR(u_int16_t pixel, u_int8_t r, bool showIt = false) {
-  colors[pixel].R = r;
+  stripState.colors[pixel].R = r;
   if (showIt) {
     show();
   }
@@ -55,7 +61,7 @@ void setR(u_int8_t r, bool showIt = false) {
 }
 
 void setG(u_int16_t pixel, u_int8_t g, bool showIt = false) {
-  colors[pixel].G = g;
+  stripState.colors[pixel].G = g;
   if (showIt) {
     show();
   }
@@ -70,7 +76,7 @@ void setG(u_int8_t g, bool showIt = false) {
 }
 
 void setB(u_int16_t pixel, u_int8_t b, bool showIt = false) {
-  colors[pixel].B = b;
+  stripState.colors[pixel].B = b;
   if (showIt) {
     show();
   }
@@ -158,12 +164,12 @@ void clear(bool showIt = false) {
 }
 
 void setBrightness(u_int8_t b, bool showIt = false) {
-  brightness = b;
+  stripState.brightness = b;
   if (showIt) {
     show();
   }
 }
 
 RgbColor get(u_int16_t pixel) {
-  return colors[pixel];
+  return stripState.colors[pixel];
 }

@@ -73,6 +73,10 @@ private:
     unsigned long latestCloudSpawnTime;
 
 public:
+    bool isPlaying() {
+        return false;
+    }
+
     void start() {
         latestCloudSpawnTime = millis();
         clouds.push_back(NebulaCloud());
