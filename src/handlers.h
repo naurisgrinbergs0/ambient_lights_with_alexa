@@ -47,6 +47,7 @@ void advanceAllAnims() {
 
 void handleLightsOn()  {
     if (!stripState.isOn) {
+        setBrightness(255);
         bootAnim->setModeOpen();
         bootAnim->setDuration(500);
         bootAnim->start();

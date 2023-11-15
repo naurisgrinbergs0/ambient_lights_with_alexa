@@ -74,24 +74,24 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
   Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
 
   if (strcmp(device_name, VIRTUAL_DEVICE_01) == 0) {
-      if (isInRange(value, 1, 5)) { // Sets color to white and turns the strip on
+      if (isInRange(value, 1, 5)) { // Sets color to white and turns the strip on - 3
         setRGB(255, 255, 255);
         handleLightsOn();
-      } else if (isInRange(value, 6, 10)) { // Turns the strip off
+      } else if (isInRange(value, 6, 10)) { // Turns the strip off - 8
         handleLightsOff();
-      } else if (isInRange(value, 11, 15)) { // Toggles the led strip
+      } else if (isInRange(value, 11, 15)) { // Toggles the led strip - 13
         handleLightToggle();
-      } else if (isInRange(value, 16, 20)) { // Turns on light over the bed
+      } else if (isInRange(value, 16, 20)) { // Turns on light over the bed - 18
         handleNightLight();
-      } else if (isInRange(value, 21, 25)) { // Starts infinite rainbow animation
+      } else if (isInRange(value, 21, 25)) { // Starts infinite rainbow animation - 23
         handleRainbow();
-      } else if (isInRange(value, 26, 30)) { // Starts pixel rush animation
+      } else if (isInRange(value, 26, 30)) { // Starts pixel rush animation - 28
         handlePixelRush();
-      } else if (isInRange(value, 31, 35)) { // Starts danger animation
+      } else if (isInRange(value, 31, 35)) { // Starts danger animation - 33
         handleDanger();
-      } else if (isInRange(value, 36, 40)) { // Sets Netflix and Chill mood
+      } else if (isInRange(value, 36, 40)) { // Sets Netflix and Chill mood - 38
         handleNetflixAndChill();
-      } else if (isInRange(value, 41, 45)) { // Restarts the microcontroller
+      } else if (isInRange(value, 41, 45)) { // Restarts the microcontroller - 43
         ESP.restart();
       }
   }
