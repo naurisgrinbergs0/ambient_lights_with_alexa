@@ -10,7 +10,7 @@ struct AnimationVariable {
     int startValue = 0;
     int endValue = 0;
     int value = 0;
-    std::function<void(const AnimationVariable)> updateCallback = nullptr;
+    std::function<void(const AnimationVariable var)> updateCallback = nullptr;
 
     EasingFunction easingFunction = nullptr;
 

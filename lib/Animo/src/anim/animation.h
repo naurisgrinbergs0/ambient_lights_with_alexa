@@ -24,7 +24,7 @@ public:
     void pause();
     void update();
 
-    AnimationVariable addVar(int startValue, int endValue, std::function<void(const AnimationVariable)> updateCallback, 
+    void addVar(int startValue, int endValue, std::function<void(const AnimationVariable)> updateCallback, 
         EasingFunction easingFunction);
     void removeVar(AnimationVariable* variable);
 };

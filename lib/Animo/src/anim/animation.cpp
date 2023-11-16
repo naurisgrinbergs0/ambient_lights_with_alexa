@@ -1,17 +1,28 @@
 #include "animation.h"
 
 void Animation::update() {
+    unsigned long currentTime = millis();
     if (this->isActive) {
-        this->isActive = (millis() - this->startTime <= this->duration);
+        // update each variable
+        float time = float(currentTime - this->startTime) / this->duration;
+        for (AnimationVariable& var : this->variables) {
+            var.update(time > 1 ? 1 : time);
+        }
 
-        if (this->isActive) {
-            float time = float(millis() - this->startTime) / this->duration;
-            for (AnimationVariable var: this->variables) {
-                var.update(time);
+        // check if the duration has been exceeded
+        if (currentTime - this->startTime >= this->duration) {
+            for (AnimationVariable& var : this->variables) {
+                var.update(1);
             }
-        } else {
+            this->isActive = false;
+
+            // if the animation is looping, restart it
             if (this->isLoop) {
                 this->start();
+            }
+            // trigger the finish callback if provided
+            if (this->finishedCallback) {
+                this->finishedCallback();
             }
         }
     }
@@ -32,11 +43,10 @@ void Animation::pause() {
     this->pausedTime = millis();
 }
 
-AnimationVariable Animation::addVar(int startValue, int endValue, 
+void Animation::addVar(int startValue, int endValue, 
     std::function<void(const AnimationVariable)> updateCallback, EasingFunction easingFunction) {
     AnimationVariable variable = AnimationVariable(startValue, endValue, updateCallback, easingFunction);
     this->variables.push_back(variable);
-    return variable;
 }
 
 void Animation::removeVar(AnimationVariable* variable) {
