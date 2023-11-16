@@ -4,10 +4,10 @@
 
 Animo animo = Animo();
 
+// #include "anim_collection/GalacticNebula.h"
 #include "anim_collection/FadeBrightness.h"
 #include "anim_collection/PulseBrightnessLoop.h"
 #include "anim_collection/RainbowLoop.h"
-// #include "anim_collection/GalacticNebula.h"
 #include "anim_collection/PixelRushLoop.h"
 #include "anim_collection/FadeColor.h"
 #include "anim_collection/Window.h"
@@ -15,14 +15,24 @@ Animo animo = Animo();
 RgbColor WHITE_LIGHT = RgbColor(255, 255, 255);
 RgbColor DANGER_LIGHT = RgbColor(255, 0, 0);
 
-// GalacticNebula* galacticNebula = new GalacticNebula();
-RainbowLoop* rainbowLoop = new RainbowLoop(stripState.colors);
-PixelRushLoop* pixelRushLoop = new PixelRushLoop();
-PulseBrightnessLoop* pulseBrightnessLoop = new PulseBrightnessLoop();
-FadeColor* fadeColor = new FadeColor(stripState.colors);
-FadeBrightness* fadeBrightness = new FadeBrightness(stripState.brightness);
+// GalacticNebula* galacticNebula;
+RainbowLoop* rainbowLoop;
+PixelRushLoop* pixelRushLoop;
+PulseBrightnessLoop* pulseBrightnessLoop;
+FadeColor* fadeColor;
+FadeBrightness* fadeBrightness;
 
-Window* bootAnim = new Window(stripState.colors);
+Window* bootAnim;
+
+void initHandlers() {
+    // galacticNebula = new GalacticNebula();
+    rainbowLoop = new RainbowLoop(stripState.colors);
+    pixelRushLoop = new PixelRushLoop();
+    pulseBrightnessLoop = new PulseBrightnessLoop();
+    fadeColor = new FadeColor(stripState.colors);
+    fadeBrightness = new FadeBrightness(stripState.brightness);
+    bootAnim = new Window(stripState.colors);
+}
 
 void stopAllAnims() {
     animo.removeAllAnimations(false);
@@ -49,7 +59,7 @@ void handleLightsOn()  {
     if (!stripState.isOn) {
         setBrightness(255);
         bootAnim->setModeOpen();
-        bootAnim->setDuration(500);
+        bootAnim->setDuration(200);
         bootAnim->start();
         stripState.isTurningOn = true;
         stripState.isOn = true;
@@ -59,7 +69,7 @@ void handleLightsOff()  {
     if (stripState.isOn) { 
         stripState.isTurningOff = true;
         bootAnim->setModeClose();
-        bootAnim->setDuration(500);
+        bootAnim->setDuration(200);
         bootAnim->start();
     }
 }

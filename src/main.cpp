@@ -19,6 +19,7 @@ PulseBrightnessLoop* initAnim = new PulseBrightnessLoop();
 void setup() {
   initSerial();
   initStrip();
+  initHandlers();
 
   if (SET_UP_WIFI_AND_SERVER) {
     // initialization animation
