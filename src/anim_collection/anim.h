@@ -1,10 +1,19 @@
 #pragma once
 
 class Anim {
+protected:
+    std::function<void()> finishedCallback = nullptr;
+    bool isAnimPlaying = false;
+    
 public:
     virtual ~Anim() {}
-    
-    virtual bool isPlaying() = 0;
+
+    bool isPlaying() {
+        return this->isAnimPlaying;
+    };
     virtual void start() = 0;
-    virtual void advance() = 0;
+    virtual void onAdvance() {}
+    void onFinished(std::function<void()> callback) {
+        this->finishedCallback = callback;
+    }
 };

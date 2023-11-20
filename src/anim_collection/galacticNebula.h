@@ -5,7 +5,7 @@
 class NebulaCloud;
 // static void cloudUpdateCallback(const AnimationVariable var, u_int16_t cloudSize);
 
-class GalacticNebula : Anim {
+class GalacticNebula : public Anim {
 private:
     class NebulaCloud { 
     public:
@@ -73,16 +73,12 @@ private:
     unsigned long latestCloudSpawnTime;
 
 public:
-    bool isPlaying() {
-        return false;
-    }
-
-    void start() {
+    void start() override {
         latestCloudSpawnTime = millis();
         clouds.push_back(NebulaCloud());
     }
 
-    void advance() {
+    void onAdvance() {
         // if (clouds.size() < 2 && millis() - latestCloudSpawnTime > 20000) {
         //     latestCloudSpawnTime = millis();
         //     clouds.push_back(NebulaCloud());

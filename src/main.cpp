@@ -46,6 +46,7 @@ void handleWifiConnected() {
   setBrightness(255);
   setRGB(0, 0, 255, 0, true);
   delay(800);
+  setRGB(0, 0, 0);
   setBrightness(0, true);
 }
 

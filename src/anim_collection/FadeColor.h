@@ -5,7 +5,7 @@
 #include "../lib/Animo/src/animo.h"
 #include "anim.h"
 
-class FadeColor : Anim {
+class FadeColor : public Anim {
     private:
         enum class ColorMode {
             RGB,
@@ -27,10 +27,6 @@ class FadeColor : Anim {
     public:
         FadeColor(RgbColor* colors): colors(colors){};
 
-        bool isPlaying() {
-            return anim && anim->isActive;
-        }
-
         void setDuration(unsigned long fadeDuration) {
             this->fadeDuration = fadeDuration;
         }
@@ -50,7 +46,7 @@ class FadeColor : Anim {
             this->rgbTarget[pixel][2] = bTarget;
         }
 
-        void start() {
+        void start() override {
             if (colorMode == ColorMode::NONE) {
                 return;
             }
@@ -68,6 +64,12 @@ class FadeColor : Anim {
             }
 
             anim = animo.addAnimation(fadeDuration);
+            anim->setFinishedCallback([this]() {
+                this->isAnimPlaying = false;
+                if (this->finishedCallback) {
+                    this->finishedCallback();
+                }
+            });
             if (colorMode == ColorMode::RGB) {
                 anim->addVar(0, 255, [&](const AnimationVariable var) {
                     boolean update = false;
@@ -88,7 +90,6 @@ class FadeColor : Anim {
                 }, ANIMO_SIGMOID_EASING);
             }
             anim->start();
+            this->isAnimPlaying = true;
         }
-
-        void advance() {}
 };

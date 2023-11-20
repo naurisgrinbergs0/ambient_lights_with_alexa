@@ -5,7 +5,7 @@
 #include "../lib/Animo/src/animo.h"
 #include "anim.h"
 
-class PulseBrightnessLoop : Anim {
+class PulseBrightnessLoop : public Anim {
     private:
         AnimationChain* chain = nullptr;
         unsigned long fadeInDuration;
@@ -14,10 +14,6 @@ class PulseBrightnessLoop : Anim {
         u_int8_t endBrightness;
 
     public:
-        bool isPlaying() {
-            return chain && chain->isActive;
-        }
-
         void setFadeInDuration(unsigned long fadeInDuration) {
             this->fadeInDuration = fadeInDuration;
         }
@@ -31,7 +27,7 @@ class PulseBrightnessLoop : Anim {
             this->endBrightness = endBrightness;
         }
 
-        void start() {
+        void start() override {
             auto callback = [](const AnimationVariable var) {
                 setBrightness(var.value, true);
             };
@@ -42,7 +38,8 @@ class PulseBrightnessLoop : Anim {
             fadeIn->addVar(startBrightness, endBrightness, callback, ANIMO_SIGMOID_EASING);
             fadeOut->addVar(endBrightness, startBrightness, callback, ANIMO_SIGMOID_EASING);
             chain->start();
-        }
+            this->isAnimPlaying = true;
 
-        void advance() {}
+            // TODO: set finished callback (not implemented for chains yet & looping anims)
+        }
 };

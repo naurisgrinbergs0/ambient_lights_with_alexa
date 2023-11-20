@@ -41,15 +41,10 @@ void stopAllAnims() {
 
 void advanceAllAnims() {
     if (pixelRushLoop->isPlaying()) {
-        pixelRushLoop->advance();
+        pixelRushLoop->onAdvance();
     }
     if (rainbowLoop->isPlaying()) {
-        rainbowLoop->advance();
-    }
-    if (stripState.isTurningOff && !bootAnim->isPlaying()) {
-        stripState.isTurningOff = false;
-        stripState.isOn = false;
-        stopAllAnims();
+        rainbowLoop->onAdvance();
     }
 }
 
@@ -60,6 +55,9 @@ void handleLightsOn()  {
         setBrightness(255);
         bootAnim->setModeOpen();
         bootAnim->setDuration(200);
+        bootAnim->onFinished([]() {
+            stripState.isTurningOn = false;
+        });
         bootAnim->start();
         stripState.isTurningOn = true;
         stripState.isOn = true;
@@ -67,10 +65,15 @@ void handleLightsOn()  {
 }
 void handleLightsOff()  {
     if (stripState.isOn) { 
-        stripState.isTurningOff = true;
         bootAnim->setModeClose();
         bootAnim->setDuration(200);
+        bootAnim->onFinished([]() {
+            stripState.isTurningOff = false;
+            stripState.isOn = false;
+            stopAllAnims();
+        });
         bootAnim->start();
+        stripState.isTurningOff = true;
     }
 }
 
@@ -86,18 +89,15 @@ void handleLightToggle()  {
 void handleNightLight() {
     if (stripState.isOn) {
         stopAllAnims();
-    } else {
-        stripState.isOn = true;
     }
-
-    u_int16_t startPixel = 110;
 
     fadeBrightness->setTargetBrightness(255);
     fadeBrightness->setDuration(500);
     fadeBrightness->setUpdate(false);
+    fadeBrightness->onFinished(nullptr);
     fadeBrightness->start();
 
-
+    u_int16_t startPixel = 110;
     for (u_int16_t i = 0; i < NUM_LEDS; i++) {
         if (i < startPixel) {
             fadeColor->setTargetRGB(i, 0, 0, 0);
@@ -106,6 +106,15 @@ void handleNightLight() {
         }
     }
     fadeColor->setDuration(500);
+    if (!stripState.isOn) {
+        fadeColor->onFinished([]() {
+            stripState.isTurningOn = false;
+        });
+        stripState.isOn = true;
+        stripState.isTurningOn = true;
+    } else {
+        fadeColor->onFinished(nullptr);
+    }
     fadeColor->start();
 }
 
@@ -144,8 +153,8 @@ void handleDanger() {
     }
     if (!pulseBrightnessLoop->isPlaying()) {
         setRGB(DANGER_LIGHT.R, DANGER_LIGHT.G, DANGER_LIGHT.B);
-        pulseBrightnessLoop->setFadeInDuration(1000);
-        pulseBrightnessLoop->setFadeOutDuration(500);
+        pulseBrightnessLoop->setFadeInDuration(2000);
+        pulseBrightnessLoop->setFadeOutDuration(1000);
         pulseBrightnessLoop->setStartBrightness(0);
         pulseBrightnessLoop->setEndBrightness(255);
         pulseBrightnessLoop->start();
@@ -154,21 +163,22 @@ void handleDanger() {
 }
 
 void handleNetflixAndChill()  {
-    if (!stripState.isOn) {
-        handleLightsOn();
-    } else {
-        if (!fadeColor->isPlaying()) {
-            stopAllAnims();
-        }
-    }
     if (!fadeColor->isPlaying()) {
+        stopAllAnims();
         fadeBrightness->setTargetBrightness(80);
         fadeBrightness->setDuration(500);
         fadeBrightness->setUpdate(false);
+        fadeBrightness->onFinished(nullptr);
         fadeBrightness->start();
         
         fadeColor->setDuration(1000);
         fadeColor->setTargetRGB(255, 33, 140);
+        fadeColor->onFinished([]() {
+            stripState.isTurningOn = false;
+        });
         fadeColor->start();
+
+        stripState.isOn = true;
+        stripState.isTurningOn = true;
     }
 }

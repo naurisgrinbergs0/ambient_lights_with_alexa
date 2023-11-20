@@ -23,7 +23,7 @@ public:
     void removeAllAnimations(bool allowToFinish = true);
     void removeAllAnimationChains(bool allowToFinish = true);
 
-    Animation* addAnimation(unsigned long duration, bool isLoop = false, std::function<void()> finishedCallback = nullptr);
+    Animation* addAnimation(unsigned long duration, bool isLoop = false);
     void removeAnimation(Animation* animation, bool allowToFinish = true);
 
     AnimationChain* addAnimationChain(bool isLoop = false, std::function<void()> finishedCallback = nullptr);

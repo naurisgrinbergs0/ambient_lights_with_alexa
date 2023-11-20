@@ -5,7 +5,7 @@
 #include "../lib/Animo/src/animo.h"
 #include "anim.h"
 
-class PixelRushLoop : Anim {
+class PixelRushLoop : public Anim {
     private:
         Animation* anim = nullptr;
         u_int16_t startValue = 0;
@@ -22,19 +22,16 @@ class PixelRushLoop : Anim {
                 },
                 ANIMO_CUBIC_EASING);
             anim->start();
+            this->isAnimPlaying = true;
             startValue = endValue;
         }
 
     public:
-        bool isPlaying() {
-            return anim && anim->isActive;
-        }
-
-        void start() {
+        void start() override {
             createAnimAndStart();
         }
 
-        void advance() {
+        void onAdvance() {
             if (anim && !anim->isActive) {
                 createAnimAndStart();
             }

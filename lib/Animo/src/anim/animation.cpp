@@ -20,10 +20,6 @@ void Animation::update() {
             if (this->isLoop) {
                 this->start();
             }
-            // trigger the finish callback if provided
-            if (this->finishedCallback) {
-                this->finishedCallback();
-            }
         }
     }
 }
@@ -47,6 +43,10 @@ void Animation::addVar(int startValue, int endValue,
     std::function<void(const AnimationVariable)> updateCallback, EasingFunction easingFunction) {
     AnimationVariable variable = AnimationVariable(startValue, endValue, updateCallback, easingFunction);
     this->variables.push_back(variable);
+}
+
+void Animation::setFinishedCallback(std::function<void()> finishedCallback) {
+    this->finishedCallback = finishedCallback;
 }
 
 void Animation::removeVar(AnimationVariable* variable) {

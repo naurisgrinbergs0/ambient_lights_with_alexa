@@ -58,8 +58,8 @@ void Animo::removeAllAnimationChains(bool allowToFinish) {
 }
 
 
-Animation* Animo::addAnimation(unsigned long duration, bool isLoop, std::function<void()> finishedCallback) {
-    Animation* animation = new Animation(duration, isLoop, finishedCallback);
+Animation* Animo::addAnimation(unsigned long duration, bool isLoop) {
+    Animation* animation = new Animation(duration, isLoop);
     this->animations.push_back(animation);
     return animation;
 }

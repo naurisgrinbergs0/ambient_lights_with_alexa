@@ -5,7 +5,7 @@
 #include "../lib/Animo/src/animo.h"
 #include "anim.h"
 
-class Window : Anim {
+class Window : public Anim {
     private:
         enum class WindowMode {
             OPEN,
@@ -23,10 +23,6 @@ class Window : Anim {
     public:
         Window(RgbColor* colors): colors(colors) {};
 
-        bool isPlaying() {
-            return anim && anim->isActive;
-        }
-
         void setDuration(unsigned long fadeDuration) {
             this->duration = fadeDuration;
         }
@@ -38,7 +34,7 @@ class Window : Anim {
         }
         
 
-        void start() {
+        void start() override {
             if (windowMode == WindowMode::NONE) {
                 return;
             }
@@ -52,6 +48,12 @@ class Window : Anim {
 
             u_int16_t halfLength = ceil(NUM_LEDS / 2.0);
             anim = animo.addAnimation(duration);
+            anim->setFinishedCallback([this]() {
+                this->isAnimPlaying = false;
+                if (this->finishedCallback) {
+                    this->finishedCallback();
+                }
+            });
             anim->addVar(0, halfLength,
                 [=](const AnimationVariable var) {
                     setRGB(0, 0, 0);
@@ -70,8 +72,7 @@ class Window : Anim {
                     show();
                 },
                 ANIMO_LINEAR_EASING);
-            anim->start();          
+            anim->start();
+            this->isAnimPlaying = true;
         }
-
-        void advance() {}
 };

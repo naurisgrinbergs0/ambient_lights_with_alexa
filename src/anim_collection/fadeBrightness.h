@@ -5,7 +5,7 @@
 #include "../lib/Animo/src/animo.h"
 #include "anim.h"
 
-class FadeBrightness : Anim {
+class FadeBrightness : public Anim {
     private:
         Animation* anim = nullptr;
         unsigned long duration;
@@ -17,10 +17,6 @@ class FadeBrightness : Anim {
     public:
         FadeBrightness(u_int8_t& brightness): brightness(brightness) {};
 
-        bool isPlaying() {
-            return anim && anim->isActive;
-        }
-
         void setUpdate(bool update) {
             this->update = update;
         }
@@ -31,15 +27,20 @@ class FadeBrightness : Anim {
             this->bTarget = bTarget;
         }
 
-        void start() {
+        void start() override {
             anim = animo.addAnimation(duration);
             anim->addVar(brightness, bTarget,
                 [&](const AnimationVariable var) {
                     setBrightness(var.value, update);
                 },
                 ANIMO_LINEAR_EASING);
-            anim->start();          
+            anim->setFinishedCallback([this]() {
+                this->isAnimPlaying = false;
+                if (this->finishedCallback) {
+                    this->finishedCallback();
+                }
+            });
+            anim->start();
+            this->isAnimPlaying = true;
         }
-
-        void advance() {}
 };
