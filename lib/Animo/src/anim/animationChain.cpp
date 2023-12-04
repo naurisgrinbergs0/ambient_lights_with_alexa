@@ -13,16 +13,19 @@ Animation* AnimationChain::currAnim() {
 void AnimationChain::update() {
     if (this->isActive) {
         bool isLast = (unsigned int)(this->playingAnimIndex + 1) >= this->animations.size();
-        this->isActive = !(isLast && !this->currAnim()->isActive);
 
-        if (!currAnim()->isActive) {
+        if (currAnim()->isFinished) {
             if (!isLast) {
                 this->playingAnimIndex++;
                 this->currAnim()->start();
-                this->isActive = true;
             } else {
                 if (this->isLoop) {
                     this->start();
+                } else {
+                    if (this->finishedCallback) {
+                        this->finishedCallback();
+                        this->isFinished = true;
+                    }
                 }
             }
         }
@@ -33,18 +36,14 @@ void AnimationChain::update() {
 void AnimationChain::start() {
     this->playingAnimIndex = 0;
     this->isActive = true;
-    if (this->currAnim()->pausedTime == 0) {
-        this->currAnim()->start();
-    } else {
-        this->currAnim()->start();
-        this->currAnim()->startTime = millis() - (this->currAnim()->pausedTime - this->currAnim()->startTime);
-        this->currAnim()->pausedTime = 0;
-    }
+
+    this->currAnim()->start();
+    this->currAnim()->pausedTime = 0;
 }
 
 void AnimationChain::pause() {
     this->isActive = false;
-    this->currAnim()->pausedTime = millis();
+    this->currAnim()->pause();
 }
 
 Animation* AnimationChain::addAnimation(unsigned long duration) {

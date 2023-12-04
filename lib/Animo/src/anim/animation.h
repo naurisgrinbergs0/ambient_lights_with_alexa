@@ -10,11 +10,13 @@ private:
     std::vector<AnimationVariable> variables;
     
 public:
+    String name = "";
     unsigned long startTime = 0;
     unsigned long pausedTime = 0;
     unsigned long duration = 0;
     bool isLoop = false;
     bool isActive = false;
+    bool isFinished = false;
     std::function<void()> finishedCallback = nullptr;
 
     Animation(unsigned long duration, bool isLoop = false): duration(duration), isLoop(isLoop) {};

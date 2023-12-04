@@ -1,8 +1,8 @@
 #include "animation.h"
 
 void Animation::update() {
-    unsigned long currentTime = millis();
     if (this->isActive) {
+        unsigned long currentTime = millis();
         // update each variable
         float time = float(currentTime - this->startTime) / this->duration;
         for (AnimationVariable& var : this->variables) {
@@ -14,11 +14,14 @@ void Animation::update() {
             for (AnimationVariable& var : this->variables) {
                 var.update(1);
             }
-            this->isActive = false;
 
-            // if the animation is looping, restart it
             if (this->isLoop) {
                 this->start();
+            } else {
+                if (this->finishedCallback) {
+                    this->finishedCallback();
+                    this->isFinished = true;
+                }
             }
         }
     }
@@ -26,12 +29,10 @@ void Animation::update() {
 
 void Animation::start() {
     this->isActive = true;
-    if (this->pausedTime == 0) {
-        this->startTime = millis();
-    } else {
-        this->startTime = millis() - (this->pausedTime - this->startTime);
-        this->pausedTime = 0;
-    }
+    this->startTime = this->pausedTime == 0
+        ? millis()
+        : millis() - (this->pausedTime - this->startTime);
+    this->pausedTime = 0;
 }
 
 void Animation::pause() {

@@ -79,9 +79,11 @@ public:
     }
 
     void onAdvance() {
-        // if (clouds.size() < 2 && millis() - latestCloudSpawnTime > 20000) {
-        //     latestCloudSpawnTime = millis();
-        //     clouds.push_back(NebulaCloud());
+        // if (this->isAnimPlaying) {
+        //     if (clouds.size() < 2 && millis() - latestCloudSpawnTime > 20000) {
+        //         latestCloudSpawnTime = millis();
+        //         clouds.push_back(NebulaCloud());
+        //     }
         // }
     }
 };

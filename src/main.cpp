@@ -83,18 +83,20 @@ void virtualDeviceStateChangeCallback(unsigned char device_id, const char * devi
         handleLightsOff();
       } else if (isInRange(value, 11, 15)) { // Toggles the led strip - 13
         handleLightToggle();
-      } else if (isInRange(value, 16, 20)) { // Turns on light over the bed - 18
+      } else if (isInRange(value, 16, 20)) { // Night light - 18
         handleNightLight();
-      } else if (isInRange(value, 21, 25)) { // Starts infinite rainbow animation - 23
+      } else if (isInRange(value, 21, 25)) { // Infinite rainbow animation - 23
         handleRainbow();
-      } else if (isInRange(value, 26, 30)) { // Starts pixel rush animation - 28
+      } else if (isInRange(value, 26, 30)) { // Pixel rush animation - 28
         handlePixelRush();
-      } else if (isInRange(value, 31, 35)) { // Starts danger animation - 33
+      } else if (isInRange(value, 31, 35)) { // Danger animation - 33
         handleDanger();
-      } else if (isInRange(value, 36, 40)) { // Sets Netflix and Chill mood - 38
+      } else if (isInRange(value, 36, 40)) { // Netflix and Chill mood - 38
         handleNetflixAndChill();
       } else if (isInRange(value, 41, 45)) { // Restarts the microcontroller - 43
         ESP.restart();
+      } else if (isInRange(value, 46, 50)) { // Christmas mood - 48
+        handleChristmasMood();
       }
   }
 }

@@ -10,6 +10,7 @@ Animo animo = Animo();
 #include "anim_collection/RainbowLoop.h"
 #include "anim_collection/PixelRushLoop.h"
 #include "anim_collection/FadeColor.h"
+#include "anim_collection/ChristmasLoop.h"
 #include "anim_collection/Window.h"
 
 RgbColor WHITE_LIGHT = RgbColor(255, 255, 255);
@@ -21,6 +22,7 @@ PixelRushLoop* pixelRushLoop;
 PulseBrightnessLoop* pulseBrightnessLoop;
 FadeColor* fadeColor;
 FadeBrightness* fadeBrightness;
+ChristmasLoop* christmasLoop;
 
 Window* bootAnim;
 
@@ -31,6 +33,7 @@ void initHandlers() {
     pulseBrightnessLoop = new PulseBrightnessLoop();
     fadeColor = new FadeColor(stripState.colors);
     fadeBrightness = new FadeBrightness(stripState.brightness);
+    christmasLoop = new ChristmasLoop(stripState.colors);
     bootAnim = new Window(stripState.colors);
 }
 
@@ -40,12 +43,8 @@ void stopAllAnims() {
 }
 
 void advanceAllAnims() {
-    if (pixelRushLoop->isPlaying()) {
-        pixelRushLoop->onAdvance();
-    }
-    if (rainbowLoop->isPlaying()) {
-        rainbowLoop->onAdvance();
-    }
+    pixelRushLoop->onAdvance();
+    rainbowLoop->onAdvance();
 }
 
 // =======================================
@@ -180,5 +179,19 @@ void handleNetflixAndChill()  {
 
         stripState.isOn = true;
         stripState.isTurningOn = true;
+    }
+}
+
+void handleChristmasMood()  {
+    if (!stripState.isOn) {
+        handleLightsOn();
+    } else {
+        if (!rainbowLoop->isPlaying()) {
+            stopAllAnims();
+        }
+    }
+    if (!rainbowLoop->isPlaying()) {
+        rainbowLoop->setDuration(10000);
+        rainbowLoop->start();
     }
 }

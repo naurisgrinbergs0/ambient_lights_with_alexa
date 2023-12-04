@@ -15,10 +15,8 @@ void Animo::advanceAnimations() {
     for (Animation* anim: this->animations) {
         if (anim->isActive) {
             anim->update();
-        } else {
-            if (anim->finishedCallback) {
-                anim->finishedCallback();
-            }
+        }
+        if (anim->isFinished) {
             this->removeAnimation(anim, false);
         }
     }
@@ -26,10 +24,8 @@ void Animo::advanceAnimations() {
     for (AnimationChain* ch: this->animationChains) {
         if (ch->isActive) {
             ch->update();
-        } else {
-            if (ch->finishedCallback) {
-                ch->finishedCallback();
-            }
+        } 
+        if (ch->isFinished) {
             this->removeAnimationChain(ch, false);
         }
     }
@@ -64,6 +60,13 @@ Animation* Animo::addAnimation(unsigned long duration, bool isLoop) {
     return animation;
 }
 
+AnimationChain* Animo::addAnimationChain(bool isLoop, std::function<void()> finishedCallback) {
+    AnimationChain* chain = new AnimationChain(isLoop, finishedCallback);
+    this->animationChains.push_back(chain);
+    return chain;
+}
+
+
 void Animo::removeAnimation(Animation* animation, bool allowToFinish) {
     auto it = std::find_if(animations.begin(), animations.end(),
         [animation](const Animation* anim) {
@@ -78,13 +81,6 @@ void Animo::removeAnimation(Animation* animation, bool allowToFinish) {
             delete animation;
         }
     }
-}
-
-
-AnimationChain* Animo::addAnimationChain(bool isLoop, std::function<void()> finishedCallback) {
-    AnimationChain* chain = new AnimationChain(isLoop, finishedCallback);
-    this->animationChains.push_back(chain);
-    return chain;
 }
 
 void Animo::removeAnimationChain(AnimationChain* chain, bool allowChainToFinish, bool allowAnimationToFinish) {

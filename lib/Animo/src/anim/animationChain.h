@@ -12,6 +12,7 @@ private:
 public:
     bool isLoop = false;
     bool isActive = false;
+    bool isFinished = false;
     u_int8_t playingAnimIndex = 0;
     std::function<void()> finishedCallback;
 

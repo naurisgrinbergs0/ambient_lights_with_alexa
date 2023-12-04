@@ -33,9 +33,9 @@ class RainbowLoop : public Anim {
             transition->setDuration(400);
             transition->setTargetRGB(255, 0, 0);
             transition->onFinished([this]() {
+                this->anim->start();
                 delete transition;
                 transition = nullptr;
-                this->anim->start();
             });
             transition->start();
             this->isAnimPlaying = true;

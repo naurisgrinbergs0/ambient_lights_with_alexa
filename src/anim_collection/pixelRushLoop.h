@@ -32,8 +32,10 @@ class PixelRushLoop : public Anim {
         }
 
         void onAdvance() {
-            if (anim && !anim->isActive) {
-                createAnimAndStart();
+            if (this->isAnimPlaying) {
+                if (anim && !anim->isActive) {
+                    createAnimAndStart();
+                }
             }
         }
 };
