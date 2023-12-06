@@ -6,7 +6,7 @@
 #include "handlers.h"
 
 #define SET_UP_WIFI_AND_SERVER 1
-#define TEST_MODE 0
+#define TEST_MODE 1
 
 #define VIRTUAL_DEVICE_01 "Virtual Device 01"
 
@@ -64,7 +64,7 @@ void loop() {
   animo.advanceAnimations();
 
   // testing
-  if (TEST_MODE) {
+  if ((TEST_MODE && (SET_UP_WIFI_AND_SERVER && isWifiConnected() && webserverInitialized)) || (TEST_MODE && !SET_UP_WIFI_AND_SERVER)) {
     test();
   }
 
@@ -107,10 +107,7 @@ bool sw = true;
 void test() {
   // delay(300);
   if (sw) {
-    setBrightness(255);
-    clear(true);
-
-    // galacticNebula->start();
+    handleChristmasMood();
 
     sw = false;
   } 

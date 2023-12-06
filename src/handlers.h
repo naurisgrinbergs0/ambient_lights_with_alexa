@@ -10,7 +10,7 @@ Animo animo = Animo();
 #include "anim_collection/RainbowLoop.h"
 #include "anim_collection/PixelRushLoop.h"
 #include "anim_collection/FadeColor.h"
-#include "anim_collection/ChristmasLoop.h"
+#include "anim_collection/ChristmasLoop/ChristmasLoop.h"
 #include "anim_collection/Window.h"
 
 RgbColor WHITE_LIGHT = RgbColor(255, 255, 255);
@@ -45,6 +45,7 @@ void stopAllAnims() {
 void advanceAllAnims() {
     pixelRushLoop->onAdvance();
     rainbowLoop->onAdvance();
+    christmasLoop->onAdvance();
 }
 
 // =======================================
@@ -186,12 +187,13 @@ void handleChristmasMood()  {
     if (!stripState.isOn) {
         handleLightsOn();
     } else {
-        if (!rainbowLoop->isPlaying()) {
+        if (!christmasLoop->isPlaying()) {
             stopAllAnims();
         }
     }
-    if (!rainbowLoop->isPlaying()) {
-        rainbowLoop->setDuration(10000);
-        rainbowLoop->start();
+    if (!christmasLoop->isPlaying()) {
+        christmasLoop->start();
+    } else {
+        christmasLoop->changeMode();
     }
 }
