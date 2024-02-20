@@ -37,7 +37,7 @@ private:
     };
 
     static void cloudUpdateCallback(const AnimationVariable var, u_int16_t cloudSize) {
-            Serial.println(cloudSize);
+            // Serial.println(cloudSize);
             // Serial.printf(" %d %d %d %d\n", cloudSize, centerHue, startPos, endPos);
             // clear();
             // u_int16_t halfCloud = cloudSize / 2;

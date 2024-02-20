@@ -56,7 +56,7 @@ class ModeBlink {
                 fadeIn = !fadeIn;
             });
             anim->addVar(0, targetBrightness, [&](const AnimationVariable var) {
-                Serial.printf("\n%d %d %d", targetBrightness, var.value, fadeIn ? var.value : targetBrightness - var.value);
+                // Serial.printf("\n%d %d %d", targetBrightness, var.value, fadeIn ? var.value : targetBrightness - var.value);
                 setBrightness(fadeIn ? var.value : targetBrightness - var.value, true);
             }, ANIMO_CUBIC_EASING);
             anim->start();
