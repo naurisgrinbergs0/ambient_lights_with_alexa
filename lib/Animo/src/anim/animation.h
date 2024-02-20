@@ -18,6 +18,7 @@ public:
     bool isActive = false;
     bool isFinished = false;
     std::function<void()> finishedCallback = nullptr;
+    std::function<void()> iterationFinishedCallback = nullptr;
 
     Animation(unsigned long duration, bool isLoop = false): duration(duration), isLoop(isLoop) {};
 
@@ -28,5 +29,6 @@ public:
     void addVar(int startValue, int endValue, std::function<void(const AnimationVariable)> updateCallback, 
         EasingFunction easingFunction);
     void setFinishedCallback(std::function<void()> finishedCallback);
+    void setIterationFinishedCallback(std::function<void()> iterationFinishedCallback);
     void removeVar(AnimationVariable* variable);
 };

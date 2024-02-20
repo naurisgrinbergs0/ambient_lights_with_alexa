@@ -69,10 +69,6 @@ public:
                     modeChase->advance();
                     break;
                 }
-                case Mode::BLINK: {
-                    modeBlink->advance();
-                    break;
-                }
                 default:
                     break;
             }

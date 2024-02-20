@@ -16,6 +16,9 @@ void Animation::update() {
             }
 
             if (this->isLoop) {
+                if (this->iterationFinishedCallback) {
+                    this->iterationFinishedCallback();
+                }
                 this->start();
             } else {
                 if (this->finishedCallback) {
@@ -48,6 +51,9 @@ void Animation::addVar(int startValue, int endValue,
 
 void Animation::setFinishedCallback(std::function<void()> finishedCallback) {
     this->finishedCallback = finishedCallback;
+}
+void Animation::setIterationFinishedCallback(std::function<void()> iterationFinishedCallback) {
+    this->iterationFinishedCallback = iterationFinishedCallback;
 }
 
 void Animation::removeVar(AnimationVariable* variable) {

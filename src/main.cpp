@@ -6,7 +6,7 @@
 #include "handlers.h"
 
 #define SET_UP_WIFI_AND_SERVER 1
-#define TEST_MODE 1
+#define TEST_MODE 0
 
 #define VIRTUAL_DEVICE_01 "Virtual Device 01"
 
