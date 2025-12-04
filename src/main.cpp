@@ -3,6 +3,7 @@
 #include "util/strip.h"
 #include "util/wifi.h"
 #include "util/server.h"
+#include "util/ota.h"
 #include "handlers.h"
 
 #define SET_UP_WIFI_AND_SERVER 1
@@ -39,6 +40,9 @@ void handleWifiConnected() {
   setupWebserver(deviceList, virtualDeviceStateChangeCallback);
   webserverInitialized = true;
 
+  // start OTA service so we can upload firmware over WiFi
+  initOTA();
+
   animo.removeAllAnimationChains(false);
   delete initAnim;
   initAnim = nullptr;
@@ -67,6 +71,9 @@ void loop() {
   if ((TEST_MODE && (SET_UP_WIFI_AND_SERVER && isWifiConnected() && webserverInitialized)) || (TEST_MODE && !SET_UP_WIFI_AND_SERVER)) {
     test();
   }
+
+  // handle OTA updates
+  handleOTA();
 
   advanceAllAnims();
 }
