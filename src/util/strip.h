@@ -17,12 +17,14 @@ void initStrip() {
 }
 
 void show() {
+  // scale brightness [0..255] to multiplier [0..256] and use integer math
+  uint16_t scale = (uint16_t)stripState.brightness + 1; // 1..256
   for (int i = 0; i < NUM_LEDS; i++) {
     stripState.strip.SetPixelColor(i, RgbColor(
-      u_int8_t(float(stripState.colors[i].R) * (float(stripState.brightness) / 255.0)), 
-      u_int8_t(float(stripState.colors[i].G) * (float(stripState.brightness) / 255.0)), 
-      u_int8_t(float(stripState.colors[i].B) * (float(stripState.brightness) / 255.0))
-      ));
+      (uint8_t)((stripState.colors[i].R * scale) >> 8),
+      (uint8_t)((stripState.colors[i].G * scale) >> 8),
+      (uint8_t)((stripState.colors[i].B * scale) >> 8)
+    ));
   }
   stripState.strip.Show();
 }

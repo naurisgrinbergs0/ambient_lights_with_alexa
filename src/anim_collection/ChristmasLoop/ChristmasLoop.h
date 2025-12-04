@@ -58,7 +58,7 @@ public:
         //     transition = nullptr;
         // });
         // transition->start();
-        this->changeMode(Mode::BLINK);
+        this->changeMode(Mode::CHASE);
         this->isAnimPlaying = true;
     }
 

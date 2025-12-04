@@ -55,10 +55,20 @@ class ModeBlink {
                 updateAll();
                 fadeIn = !fadeIn;
             });
+            // anim->addVar(0, targetBrightness, [&](const AnimationVariable var) {
+            //     setBrightness(fadeIn ? var.value : targetBrightness - var.value, true);
+            // }, ANIMO_CUBIC_EASING);
+
             anim->addVar(0, targetBrightness, [&](const AnimationVariable var) {
-                // Serial.printf("\n%d %d %d", targetBrightness, var.value, fadeIn ? var.value : targetBrightness - var.value);
-                setBrightness(fadeIn ? var.value : targetBrightness - var.value, true);
+                static unsigned long lastShowTime = 0;
+                unsigned long now = millis();
+                u_int8_t b = fadeIn ? var.value : targetBrightness - var.value;
+                // throttle Show to ~60Hz (16 ms)
+                bool doShow = (now - lastShowTime) >= 16;
+                setBrightness(b, doShow);
+                if (doShow) lastShowTime = now;
             }, ANIMO_CUBIC_EASING);
+
             anim->start();
         }
 

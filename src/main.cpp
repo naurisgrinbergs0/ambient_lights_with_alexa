@@ -9,7 +9,7 @@
 #define SET_UP_WIFI_AND_SERVER 1
 #define TEST_MODE 0
 
-#define VIRTUAL_DEVICE_01 "Virtual Device 01"
+#define VIRTUAL_DEVICE_01 "Ambient Lights"
 
 void virtualDeviceStateChangeCallback(unsigned char device_id, const char * device_name, bool state, unsigned char value);
 void test();
